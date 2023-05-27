@@ -13,7 +13,6 @@ public class DeployController {
 
     @PostMapping("/deploy")
     public void deploy(@RequestBody DeployRequest deployRequest) {
-        //TODO post for cloudworker
         restTemplate.postForObject(workerUrl + "/deploy", deployRequest, String.class);
     }
 }
