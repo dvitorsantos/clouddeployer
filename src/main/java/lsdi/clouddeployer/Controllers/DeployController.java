@@ -10,9 +10,13 @@ import org.springframework.web.client.RestTemplate;
 public class DeployController {
     RestTemplate restTemplate = new RestTemplate();
     private final String workerUrl = System.getenv("WORKER_URL");
+    private final String collectorUrl = System.getenv("COLLECTOR_URL");
 
     @PostMapping("/deploy")
     public void deploy(@RequestBody DeployRequest deployRequest) {
         restTemplate.postForObject(workerUrl + "/deploy", deployRequest, String.class);
+        deployRequest.getRules().forEach(rule -> {
+            restTemplate.postForObject(collectorUrl + "/subscribe/" + rule.getEventType(), null, String.class);
+        });
     }
 }
